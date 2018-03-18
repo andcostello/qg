@@ -46,6 +46,12 @@ func (s *SelectStmt) ToSQL() (string, []interface{}) {
 		bindings = append(bindings, b...)
 	}
 
+	for _, join := range s.Joins {
+		s, b := toSQL(join)
+		sql = append(sql, s)
+		bindings = append(bindings, b...)
+	}
+
 	if s.Condition != nil {
 		s, b := toSQL(s.Condition)
 		sql = append(sql, "where", s)

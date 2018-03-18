@@ -2,24 +2,6 @@ package qg
 
 import "testing"
 
-func assertSQL(t *testing.T, expectedSQL string, expectedBindings []interface{}, query SQLable) {
-	sql, bindings := query.ToSQL()
-	if expectedSQL != sql {
-		t.Errorf("Expected '%s', got '%s'", expectedSQL, sql)
-	}
-
-	if len(expectedBindings) != len(bindings) {
-		t.Errorf("Expected %d bindings, got %d", len(expectedBindings), len(bindings))
-		return
-	}
-
-	for i := range expectedBindings {
-		if expectedBindings[i] != bindings[i] {
-			t.Errorf("Expected binding (%v) at position %d, got %v\n%s", expectedBindings[i], i, bindings[i], expectedSQL)
-		}
-	}
-}
-
 func TestSelectBasic(t *testing.T) {
 
 	assertSQL(t,
@@ -98,6 +80,5 @@ func TestSelectTypes(t *testing.T) {
 	assertSQL(t,
 		"select name from table where id = ?",
 		[]interface{}{"blah"},
-		Select("name").From("table").Where(Eq("id", Param{"blah"})),
-	)
+		Select("name").From("table").Where(Eq("id", Param("blah"))))
 }
