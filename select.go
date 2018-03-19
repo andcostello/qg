@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// SelectStmt represents the components of a select statement.
 type SelectStmt struct {
 	IsDistinct bool
 	Columns    []interface{}
@@ -12,20 +13,24 @@ type SelectStmt struct {
 	Joins      []JoinStmt
 }
 
+// Select builds a new select statement with the given columns.
 func Select(v ...interface{}) *SelectStmt {
 	return &SelectStmt{Columns: v}
 }
 
+// From specifies the clause to select from.
 func (s *SelectStmt) From(v interface{}) *SelectStmt {
 	s.Table = v
 	return s
 }
 
+// Where adds the select's condition clause.
 func (s *SelectStmt) Where(v interface{}) *SelectStmt {
 	s.Condition = v
 	return s
 }
 
+// ToSQL implements the SQLable interface for SelectStmt.
 func (s *SelectStmt) ToSQL() (string, []interface{}) {
 	sql := []string{"select"}
 	var bindings []interface{}
