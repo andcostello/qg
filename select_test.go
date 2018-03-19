@@ -70,3 +70,37 @@ func TestSelectTypes(t *testing.T) {
 		[]interface{}{"blah"},
 		Select("name").From("table").Where(Eq("id", Param("blah"))))
 }
+
+func TestDistinct(t *testing.T) {
+	assertSQL(t,
+		"select distinct id from table",
+		[]interface{}{},
+		Select("id").Distinct().From("table"))
+
+	assertSQL(t,
+		"select distinct on (name) id, name from table",
+		[]interface{}{},
+		Select("id", "name").DistinctOn("name").From("table"))
+
+	assertSQL(t,
+		"select distinct on (first_name, last_name) id, first_name, last_name from table",
+		[]interface{}{},
+		Select("id", "first_name", "last_name").DistinctOn("first_name", "last_name").From("table"))
+}
+
+func TestOrderBy(t *testing.T) {
+	assertSQL(t,
+		"select id from table order by created",
+		[]interface{}{},
+		Select("id").From("table").OrderBy("created"))
+
+	assertSQL(t,
+		"select id from table order by created asc",
+		[]interface{}{},
+		Select("id").From("table").OrderByAsc("created"))
+
+	assertSQL(t,
+		"select id from table order by created desc",
+		[]interface{}{},
+		Select("id").From("table").OrderByDesc("created"))
+}

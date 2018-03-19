@@ -8,8 +8,8 @@ type Condition struct {
 }
 
 // Eq implements the equals operator.
-func Eq(a, b interface{}) *Condition {
-	return &Condition{
+func Eq(a, b interface{}) Condition {
+	return Condition{
 		Operator: "=",
 		Left:     a,
 		Right:    b,
@@ -17,7 +17,7 @@ func Eq(a, b interface{}) *Condition {
 }
 
 // ToSQL implements the SQLable interface for Condition.
-func (c *Condition) ToSQL() (string, []interface{}) {
+func (c Condition) ToSQL() (string, []interface{}) {
 	sl, bl := wrapIfComplex(c.Left)
 	sr, br := wrapIfComplex(c.Right)
 	return sl + " " + c.Operator + " " + sr, append(bl, br...)
