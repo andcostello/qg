@@ -1,5 +1,9 @@
 package qg
 
+import (
+	"reflect"
+)
+
 // SQLable is an interface for anything that can be serialized into SQL.
 type SQLable interface {
 	ToSQL() (string, []interface{})
@@ -40,11 +44,17 @@ func Alias(v interface{}, name string) AliasClause {
 
 // Internal utility function for converting anything to sql.
 func toSQL(v interface{}) (string, []interface{}) {
-	if t, ok := v.(string); ok {
+	switch t := v.(type) {
+	case string:
 		return t, nil
-	}
-	if t, ok := v.(SQLable); ok {
+	case SQLable:
 		return t.ToSQL()
+	}
+
+	t := reflect.ValueOf(v)
+	switch t.Kind() {
+	case reflect.Array, reflect.Slice:
+		t.
 	}
 	return "?", []interface{}{v}
 }
